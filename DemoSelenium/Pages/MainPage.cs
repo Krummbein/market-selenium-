@@ -32,9 +32,9 @@ namespace DemoSelenium.Pages
 
         private List<IWebElement> ShopItemList;
 
+
         public MainPage(IWebDriver driver) : base(driver)
         {
-            //ShopItemList = new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
         }
 
 
@@ -89,7 +89,8 @@ namespace DemoSelenium.Pages
 
         public List<IWebElement> FindItems()
         {
-            return new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
+            ShopItemList = new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
+            return ShopItemList;
         }
 
         public DressesPage ClickBarDressesButton()

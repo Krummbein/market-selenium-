@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace DemoSelenium.Pages
         public void NavigateOnPage(string pageURL)
         {
             driver.Navigate().GoToUrl(pageURL);
+            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(ExpectedConditions.UrlToBe(pageURL));
         }
 
         public void ClickButton(string XPath)
