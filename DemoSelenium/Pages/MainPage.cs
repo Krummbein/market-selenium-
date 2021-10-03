@@ -7,79 +7,106 @@ using System.Collections.Generic;
 
 namespace DemoSelenium.Pages
 {
-    class MainPage
+    class MainPage : Page
     {
-        private IWebDriver driver;
+        private string ShopItemXPath = "//div[@class='product-container']";
+        private string AddToCartButtonXPath = "//a[@class='button ajax_add_to_cart_button btn btn-default']";
 
-        public MainPage(IWebDriver driver)
+        private string ConfirmWindowXPath = "//*[@class='layer_cart_product col-xs-12 col-md-6']";
+        private string ConfirmIconXPath = "//*[@class='clearfix']//*[@class='icon-ok']";
+        private string ContinueShoppingButtonXPath = "//*[@class='continue btn btn-default button exclusive-medium']";
+
+        private string CartMenuXPath = "//div[@class='shopping_cart']/a[@title='View my shopping cart']";
+        private string CartListXPath = "//*[@class='block_content']//*[@class='cart_block_list']";
+        private string CartMenuItemNameXPath = "//div[@class='shopping_cart']//div[@class='product-name']";
+
+        private string SearchFieldXPath = "//input[@class='search_query form-control ac_input']";
+        private string NavigationBarXPath = "//span[@class='navigation_page']";
+
+        private string BarDressesButtonXPath = "//*[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/*[a[@title='Dresses']]";
+        private string BarWomenButtonXPath = "//*[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/*[a[@title='Women']]";
+
+        private string ConfirmMessageXPath = "//*[@class='layer_cart_product col-xs-12 col-md-6']//h2";
+
+        public readonly string pageURL = "http://automationpractice.com/index.php";
+
+        public List<IWebElement> ShopItemList;
+
+        public MainPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
+            ShopItemList = new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
         }
 
 
         public IWebElement FindAddToCartButton()
         {
-            var productContainer = driver.FindElement(By.XPath("//div[@class='product-container']"));
+            var productContainer = driver.FindElement(By.XPath(ShopItemXPath));
             Actions moveToContainer = new Actions(driver).MoveToElement(productContainer);
             moveToContainer.Perform();
-            IWebElement addToCartButton = driver.FindElement(By.XPath("//a[@class='button ajax_add_to_cart_button btn btn-default']"));
+            IWebElement addToCartButton = driver.FindElement(By.XPath(AddToCartButtonXPath));
             return addToCartButton;
         }
 
 
-        public void addItemToCart()
+        public void AddItemToCart()
         {
             var addToCartButton = FindAddToCartButton();
             addToCartButton.Click();
             var waitForConfirm = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath("//*[@class='layer_cart_product col-xs-12 col-md-6']")));
+                (By.XPath(ConfirmWindowXPath)));
         }
 
 
         public void MoveToCartList()
         {
-            var shoppingCartMenu = driver.FindElement(By.XPath("//div[@class='shopping_cart']/a[@title='View my shopping cart']"));
+            var shoppingCartMenu = driver.FindElement(By.XPath(CartMenuXPath));
             var moveToCart = new Actions(driver).MoveToElement(shoppingCartMenu);
             moveToCart.Perform();
             var waitForCartOpened = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath("//*[@class='block_content']//*[@class='cart_block_list']")));
+                (By.XPath(CartListXPath)));
         }
 
-        public void ContinueShopping()
+        public void ClicklContinueShoppingButton()
         {
-            driver.FindElement(By.XPath("//*[@class='continue btn btn-default button exclusive-medium']")).Click();
+            ClickButton(ContinueShoppingButtonXPath);
             var waitForConfirmHide = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.InvisibilityOfElementLocated
-                (By.XPath("//*[@class='clearfix']//*[@class='icon-ok']")));
+                (By.XPath(ConfirmIconXPath)));
         }
 
         public IWebElement FindProductName()
         {
-            return driver.FindElement(By.XPath("//div[@class='shopping_cart']//div[@class='product-name']"));
+            return driver.FindElement(By.XPath(CartMenuItemNameXPath));
         }
 
         public IWebElement RunEmptySearch()
         {
-            var searchField = driver.FindElement(By.XPath("//input[@class='search_query form-control ac_input']"));
+            var searchField = driver.FindElement(By.XPath(SearchFieldXPath));
             searchField.Submit();
             var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath("//span[@class='navigation_page']")));
-            return driver.FindElement(By.XPath("//span[@class='navigation_page']"));
+                (By.XPath(NavigationBarXPath)));
+            return driver.FindElement(By.XPath(NavigationBarXPath));
         }
 
         public List<IWebElement> FindItems()
         {
-            return new List<IWebElement>(driver.FindElements(By.XPath("//div[@class='product-container']")));
+            return ShopItemList;
         }
 
-        public DressesPage GoToDressesPage()
+        public DressesPage ClickBarDressesButton()
         {
-            driver.FindElement(By.XPath("//*[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/*[a[@title='Dresses']]")).Click();
+            ClickButton(BarDressesButtonXPath);
             return new DressesPage(driver);
+        }
+
+        public WomenPage ClickBarWomenButton()
+        {
+            ClickButton(BarWomenButtonXPath);
+            return new WomenPage(driver);
         }
 
         public IWebElement ReturnConfirmationMessage()
         {
-            return driver.FindElement(By.XPath("//*[@class='layer_cart_product col-xs-12 col-md-6']//h2"));
+            return driver.FindElement(By.XPath(ConfirmMessageXPath));
         }
 
     }

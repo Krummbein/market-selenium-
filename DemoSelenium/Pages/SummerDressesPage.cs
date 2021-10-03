@@ -3,23 +3,23 @@ using System.Collections.Generic;
 
 namespace DemoSelenium.Pages
 {
-    class SummerDressesPage
+    class SummerDressesPage : Page
     {
-        private IWebDriver driver;
+        private string CatNameXPath = "//span[@class='cat-name']";
+        private string ShopItemXPath = "//div[@class='product-container']";
 
-        public SummerDressesPage(IWebDriver driver)
+        public SummerDressesPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         public IWebElement ReturnCategoryName()
         {
-            return driver.FindElement(By.XPath("//span[@class='cat-name']"));
+            return driver.FindElement(By.XPath(CatNameXPath));
         }
 
         public List<IWebElement> FindItems()
         {
-            return new List<IWebElement>(driver.FindElements(By.XPath("//div[@class='product-container']")));
+            return new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
         }
     }
 }

@@ -5,25 +5,24 @@ using System;
 
 namespace DemoSelenium.Pages
 {
-    class DressesPage
+    class DressesPage : Page
     {
-        private IWebDriver driver;
-
-        public DressesPage(IWebDriver driver)
+        private string CheckboxXPath = "//input[@class='checkbox']";
+        private string SubCatSummerDressesXPath = "//div[@id='subcategories']//a[@title='Summer Dresses']";
+        public DressesPage(IWebDriver driver) : base(driver)
         {
-            this.driver = driver;
         }
 
         public IWebElement SelectCheckbox()
         {
-            var checkbox = driver.FindElement(By.XPath("//input[@class='checkbox' and @name='layered_category_9']"));
+            var checkbox = driver.FindElement(By.XPath(CheckboxXPath));
             checkbox.Click();
             return checkbox;
         }
 
         public SummerDressesPage GoToSummerDressesPage()
         {
-            driver.FindElement(By.XPath("//div[@id='subcategories']//a[@title='Summer Dresses']")).Click();
+            ClickButton(SubCatSummerDressesXPath);
             var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(ExpectedConditions.UrlToBe("http://automationpractice.com/index.php?id_category=11&controller=category"));
             return new SummerDressesPage(driver);
         }

@@ -1,4 +1,4 @@
-using DemoSelenium.Pages;
+ using DemoSelenium.Pages;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -13,6 +13,8 @@ namespace DemoSelenium
         private MainPage mainPage;
         private DressesPage dressesPage;
         private SummerDressesPage summerDressesPage;
+        private WomenPage womenPage;
+        private TopsPage topsPage;
 
         [SetUp]
         public void Setup()
@@ -20,7 +22,6 @@ namespace DemoSelenium
             new DriverManager().SetUpDriver(new ChromeConfig());
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl("http://automationpractice.com/index.php");
             mainPage = new MainPage(driver);
         }
 
@@ -28,7 +29,8 @@ namespace DemoSelenium
         [Test, Description("Navigate to Summer Dresses and Count items")]
         public void SummerDressesTest()
         {
-            dressesPage = mainPage.GoToDressesPage();
+            mainPage.NavigateOnPage(mainPage.pageURL);
+            dressesPage = mainPage.ClickBarDressesButton();
             summerDressesPage = dressesPage.GoToSummerDressesPage();
             
             Assert.Multiple(() =>
@@ -43,40 +45,34 @@ namespace DemoSelenium
         [Test, Description("Items count is not Zero")]
         public void ItemTest()
         {
+            mainPage.NavigateOnPage(mainPage.pageURL);
             Assert.AreNotEqual(0, mainPage.FindItems().Count);
         }
 
 
-        [Test, Description("Add to card button is enabled")]
+        [Test, Description("Add to card button is enabled, confirm shows, continue shopping and chek the cart")]
         public void AddToCartTest()
         {
+            mainPage.NavigateOnPage(mainPage.pageURL);
+
             var addToCartButton = mainPage.FindAddToCartButton();
-            Assert.AreEqual(true, addToCartButton.Enabled);
-        }
-
-
-        [Test, Description("Message of successfull addition is shown")]
-        public void ConfirmCartTest()
-        {
-            mainPage.addItemToCart();
+            Assert.AreEqual(true, addToCartButton.Enabled); 
+        
+            mainPage.AddItemToCart(); 
             Assert.AreEqual("Product successfully added to your shopping cart", mainPage.ReturnConfirmationMessage().Text);
-        }
-
-
-        [Test, Description("Continue shopping, check the item is in the cart")]
-        public void ContinueShoppingTest()
-        {
-            mainPage.addItemToCart();
-            mainPage.ContinueShopping();
+        
+            mainPage.ClicklContinueShoppingButton();
             mainPage.MoveToCartList();
             var productName = mainPage.FindProductName();
-            Assert.AreEqual(true, productName.Displayed);
+            Assert.AreEqual(true, productName.Displayed); 
         }
 
 
         [Test, Description("Run an empty search query")]
         public void SearchfiledTest()
         {
+            mainPage.NavigateOnPage(mainPage.pageURL);
+
             var navigationBar = mainPage.RunEmptySearch();
             Assert.AreEqual("Search", navigationBar.Text);
         }
@@ -85,18 +81,64 @@ namespace DemoSelenium
         [Test, Description("Select a checkbox")]
         public void CheckBoxTest()
         {
-            dressesPage = mainPage.GoToDressesPage();
+            mainPage.NavigateOnPage(mainPage.pageURL);
+
+            dressesPage = mainPage.ClickBarDressesButton();
             var checkbox = dressesPage.SelectCheckbox();
             Assert.AreEqual(true, checkbox.Selected);
         }
 
 
-        [Test, Description("Get logo's alternative text'")]
+        [Test, Description("Get logo's alternative text")]
         public void GetAttributeTest()
         {
+            mainPage.NavigateOnPage(mainPage.pageURL);
+
             var logo = driver.FindElement(By.XPath("//img[@class='logo img-responsive']"));
             Assert.AreEqual("My Store", logo.GetAttribute("alt"));
         }
+
+
+        [Test, Description("Navigate to women page, check names the number of subcategories")]
+        public void GoToWomenPage()
+        {
+            mainPage.NavigateOnPage(mainPage.pageURL);
+            womenPage = mainPage.ClickBarWomenButton();
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual("WOMEN ", womenPage.ReturnCategoryName().Text);
+                Assert.AreEqual(2, womenPage.FindSubCategories().Count);
+                Assert.AreEqual("TOPS", womenPage.ReturnTopsSubCatText().Text);
+                Assert.AreEqual("DRESSES", womenPage.ReturnDressesSubCatText().Text);
+            }
+            );
+        }
+
+        [Test]
+        public void GoToTopsPage()
+        {
+            mainPage.NavigateOnPage(mainPage.pageURL);
+            womenPage = mainPage.ClickBarWomenButton();
+            topsPage = womenPage.ClickTopsSubCatButton();
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual("TOPS ", topsPage.ReturnCategoryName().Text);
+                Assert.AreEqual(true, topsPage.SelectSSize().Selected);
+                Assert.AreEqual(true, topsPage.SelectMSize().Selected);
+                Assert.AreEqual(true, topsPage.SelectLSize().Selected);
+                Assert.AreEqual(true, topsPage.WhiteColorEnabled());
+                Assert.AreEqual(true, topsPage.BlackColorEnabled());
+                Assert.AreEqual(true, topsPage.OrangeColorEnabled());
+                Assert.AreEqual(true, topsPage.BlueColorEnabled());
+            }
+            );
+        }
+
+
+
+
 
 
         [TearDown]
