@@ -30,11 +30,11 @@ namespace DemoSelenium.Pages
 
         public readonly string pageURL = "http://automationpractice.com/index.php";
 
-        public List<IWebElement> ShopItemList;
+        private List<IWebElement> ShopItemList;
 
         public MainPage(IWebDriver driver) : base(driver)
         {
-            ShopItemList = new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
+            //ShopItemList = new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
         }
 
 
@@ -89,7 +89,7 @@ namespace DemoSelenium.Pages
 
         public List<IWebElement> FindItems()
         {
-            return ShopItemList;
+            return new List<IWebElement>(driver.FindElements(By.XPath(ShopItemXPath)));
         }
 
         public DressesPage ClickBarDressesButton()
