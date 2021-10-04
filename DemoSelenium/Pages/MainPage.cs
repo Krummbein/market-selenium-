@@ -38,7 +38,7 @@ namespace DemoSelenium.Pages
         }
 
 
-        public IWebElement FindAddToCartButton()
+        public IWebElement MoveToItemAndFindAddButton()
         {
             var productContainer = driver.FindElement(By.XPath(ShopItemXPath));
             Actions moveToContainer = new Actions(driver).MoveToElement(productContainer);
@@ -50,10 +50,12 @@ namespace DemoSelenium.Pages
 
         public void AddItemToCart()
         {
-            var addToCartButton = FindAddToCartButton();
+            var addToCartButton = MoveToItemAndFindAddButton();
             addToCartButton.Click();
-            var waitForConfirm = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath(ConfirmWindowXPath)));
+            var waitForConfirm = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(
+                c => { IWebElement e = c.FindElement(By.XPath(ConfirmWindowXPath));
+                    return e.Displayed;
+                });
         }
 
 
@@ -62,15 +64,22 @@ namespace DemoSelenium.Pages
             var shoppingCartMenu = driver.FindElement(By.XPath(CartMenuXPath));
             var moveToCart = new Actions(driver).MoveToElement(shoppingCartMenu);
             moveToCart.Perform();
-            var waitForCartOpened = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath(CartListXPath)));
+            var waitForCartOpened = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(
+                c => { IWebElement e = c.FindElement(By.XPath(CartListXPath));
+                    return e.Displayed;
+                });
         }
 
+
+        // clicks the continue button and waits until icon is not visible
         public void ClicklContinueShoppingButton()
         {
             ClickButton(ContinueShoppingButtonXPath);
-            var waitForConfirmHide = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.InvisibilityOfElementLocated
-                (By.XPath(ConfirmIconXPath)));
+            var waitForConfirmHide = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(
+                c => {
+                    IWebElement e = c.FindElement(By.XPath(ConfirmIconXPath));
+                    return !e.Displayed;
+                });
         }
 
         public IWebElement FindProductName()
@@ -82,8 +91,10 @@ namespace DemoSelenium.Pages
         {
             var searchField = driver.FindElement(By.XPath(SearchFieldXPath));
             searchField.Submit();
-            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementIsVisible
-                (By.XPath(NavigationBarXPath)));
+            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(3)).Until(
+                c => {IWebElement e = c.FindElement(By.XPath(NavigationBarXPath));
+                    return e.Displayed;
+                });
             return driver.FindElement(By.XPath(NavigationBarXPath));
         }
 

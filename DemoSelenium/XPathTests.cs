@@ -55,7 +55,7 @@ namespace DemoSelenium
         {
             mainPage.NavigateOnPage(mainPage.pageURL);
 
-            var addToCartButton = mainPage.FindAddToCartButton();
+            var addToCartButton = mainPage.MoveToItemAndFindAddButton();
             Assert.AreEqual(true, addToCartButton.Enabled); 
         
             mainPage.AddItemToCart(); 
@@ -125,13 +125,13 @@ namespace DemoSelenium
             Assert.Multiple(() =>
             {
                 Assert.AreEqual("TOPS ", topsPage.ReturnCategoryName().Text);
-                Assert.AreEqual(true, topsPage.SelectSSize().Selected);
-                Assert.AreEqual(true, topsPage.SelectMSize().Selected);
-                Assert.AreEqual(true, topsPage.SelectLSize().Selected);
-                Assert.AreEqual(true, topsPage.WhiteColorEnabled());
-                Assert.AreEqual(true, topsPage.BlackColorEnabled());
-                Assert.AreEqual(true, topsPage.OrangeColorEnabled());
-                Assert.AreEqual(true, topsPage.BlueColorEnabled());
+                Assert.AreEqual(true, topsPage.SelectSizeCheckbox(topsPage.SSizeCheckboxXPath).Selected);
+                Assert.AreEqual(true, topsPage.SelectSizeCheckbox(topsPage.MSizeCheckboxXPath).Selected);
+                Assert.AreEqual(true, topsPage.SelectSizeCheckbox(topsPage.LSizeCheckboxXPath).Selected);
+                Assert.AreEqual(true, topsPage.isColorButtonEnabled(topsPage.WhiteColorXPath));
+                Assert.AreEqual(true, topsPage.isColorButtonEnabled(topsPage.BlackColorXPath));
+                Assert.AreEqual(true, topsPage.isColorButtonEnabled(topsPage.OrangeColorXPath));
+                Assert.AreEqual(true, topsPage.isColorButtonEnabled(topsPage.BlueColorXPath));
             }
             );
         }

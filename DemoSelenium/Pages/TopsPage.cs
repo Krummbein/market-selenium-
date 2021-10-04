@@ -8,16 +8,21 @@ namespace DemoSelenium.Pages
     class TopsPage : Page
     {
         private string CatNameXPath = "//span[@class='cat-name']";
+        private readonly string sSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_1']";
+        private readonly string mSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_2']";
+        private readonly string lSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_3']";
+        private readonly string whiteColorXPath = "//*[@id='layered_id_attribute_group_8']";
+        private readonly string blackColorXPath = "//*[@id='layered_id_attribute_group_11']";
+        private readonly string orangeColorXPath = "//*[@id='layered_id_attribute_group_13']";
+        private readonly string blueColorXPath = "//*[@id='layered_id_attribute_group_14']";
 
-        private string SSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_1']";
-        private string MSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_2']";
-        private string LSizeCheckboxXPath = "//*[@id='layered_id_attribute_group_3']";
-
-        private string WhiteColorXPath = "//*[@id='layered_id_attribute_group_8']";
-        private string BlackColorXPath = "//*[@id='layered_id_attribute_group_11']";
-        private string OrangeColorXPath = "//*[@id='layered_id_attribute_group_13']";
-        private string BlueColorXPath = "//*[@id='layered_id_attribute_group_14']";
-
+        public string SSizeCheckboxXPath { get => sSizeCheckboxXPath; }
+        public string MSizeCheckboxXPath { get => mSizeCheckboxXPath; }
+        public string LSizeCheckboxXPath { get => lSizeCheckboxXPath; }
+        public string WhiteColorXPath { get => whiteColorXPath; }
+        public string BlackColorXPath { get => blackColorXPath; }
+        public string OrangeColorXPath { get => orangeColorXPath; }
+        public string BlueColorXPath { get => blueColorXPath; }
         public TopsPage(IWebDriver driver) : base(driver)
         {
         }
@@ -27,45 +32,16 @@ namespace DemoSelenium.Pages
             return driver.FindElement(By.XPath(CatNameXPath));
         }
 
-        public IWebElement SelectSSize()
+        public IWebElement SelectSizeCheckbox(string SizeCheckboxXPath)
         {
-            var checkbox = driver.FindElement(By.XPath(SSizeCheckboxXPath));
+            var checkbox = driver.FindElement(By.XPath(SizeCheckboxXPath));
             checkbox.Click();
             return checkbox;
         }
 
-        public IWebElement SelectMSize()
+        public bool isColorButtonEnabled(string ColorXPath)
         {
-            var checkbox = driver.FindElement(By.XPath(MSizeCheckboxXPath));
-            checkbox.Click();
-            return checkbox;
-        }
-
-        public IWebElement SelectLSize()
-        {
-            var checkbox = driver.FindElement(By.XPath(LSizeCheckboxXPath));
-            checkbox.Click();
-            return checkbox;
-        }
-
-        public Boolean WhiteColorEnabled()
-        {
-            return driver.FindElement(By.XPath(WhiteColorXPath)).Enabled;
-        }
-
-        public Boolean BlackColorEnabled()
-        {
-            return driver.FindElement(By.XPath(BlackColorXPath)).Enabled;
-        }
-
-        public Boolean OrangeColorEnabled()
-        {
-            return driver.FindElement(By.XPath(OrangeColorXPath)).Enabled;
-        }
-
-        public Boolean BlueColorEnabled()
-        {
-            return driver.FindElement(By.XPath(BlueColorXPath)).Enabled;
+            return driver.FindElement(By.XPath(ColorXPath)).Enabled;
         }
     }
 }

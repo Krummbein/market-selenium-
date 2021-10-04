@@ -23,7 +23,8 @@ namespace DemoSelenium.Pages
         public SummerDressesPage GoToSummerDressesPage()
         {
             ClickButton(SubCatSummerDressesXPath);
-            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(ExpectedConditions.UrlToBe("http://automationpractice.com/index.php?id_category=11&controller=category"));
+            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(
+                c => string.Equals(driver.Url, "http://automationpractice.com/index.php?id_category=11&controller=category"));
             return new SummerDressesPage(driver);
         }
     }

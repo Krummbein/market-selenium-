@@ -3,7 +3,6 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 
-
 namespace DemoSelenium.Pages
 {
     class WomenPage : Page
@@ -20,18 +19,19 @@ namespace DemoSelenium.Pages
 
         public WomenPage(IWebDriver driver) : base(driver)
         {
-            SubCatList = new List<IWebElement>(driver.FindElements(By.XPath(SubCategoriesXPath)));
         }
 
         public List<IWebElement> FindSubCategories()
         {
+            SubCatList = new List<IWebElement>(driver.FindElements(By.XPath(SubCategoriesXPath)));
             return SubCatList;
         }
 
         public TopsPage ClickTopsSubCatButton()
         {
             ClickButton(SubCatTopsXPath);
-            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(ExpectedConditions.UrlToBe("http://automationpractice.com/index.php?id_category=4&controller=category"));
+            var waitForPage = new WebDriverWait(driver, TimeSpan.FromSeconds(5)).Until(
+                c => string.Equals(driver.Url, "http://automationpractice.com/index.php?id_category=4&controller=category"));
             return new TopsPage(driver);
         }
 
